@@ -1,23 +1,79 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import { Camera, Permissions } from "expo";
 
 export default class App extends React.Component {
+  state = {
+    hasCameraPermission: null,
+    type: Camera.Constants.Type.back,
+  };
+
+  async componentWillMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === "granted" });
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
+    const { hasCameraPermission } = this.state;
+    if (hasCameraPermission) {
+      return (
+        <View style={{ flex: 1 }}>
+          <Camera
+            style={{ flex: 1, justifyContent: "flex-start" }}
+            type={this.state.type}
+          >
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
+                marginTop: 150,
+              }}
+            >
+              Take a photo of the nearest parking signs to your car.
+            </Text>
+            <View
+              style={{
+                backgroundColor: "rgba(0,0,0,0.5)",
+                flex: 0,
+                flexDirection: "row",
+                padding: 5,
+                marginTop: "auto",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  flex: 0,
+                  alignSelf: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  this.setState({
+                    type:
+                      this.state.type === Camera.Constants.Type.back
+                        ? Camera.Constants.Type.front
+                        : Camera.Constants.Type.back,
+                  });
+                }}
+              >
+                <Text
+                  style={{
+                    flex: 0,
+                    fontSize: 18,
+                    marginBottom: 10,
+                    color: "white",
+                  }}
+                >
+                  {" "}
+                  Flip{" "}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        </View>
+      );
+    } else {
+      return <View />;
+    }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
