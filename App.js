@@ -1,79 +1,18 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View } from "react-native";
 import { Camera, Permissions } from "expo";
+import { NativeRouter, Route } from "react-router-native";
 
-export default class App extends React.Component {
-  state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
-  };
+import CameraPage from "./CameraPage";
+import ResultsPage from "./ResultsPage";
 
-  async componentWillMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === "granted" });
-  }
+const App = () =>
+    <NativeRouter style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <Route path="/camera" component={CameraPage} />
+        <Route path="/results" component={ResultsPage} />
+        <Route path="/" exact component={CameraPage} />
+      </View>
+    </NativeRouter>;
 
-  render() {
-    const { hasCameraPermission } = this.state;
-    if (hasCameraPermission) {
-      return (
-        <View style={{ flex: 1 }}>
-          <Camera
-            style={{ flex: 1, justifyContent: "flex-start" }}
-            type={this.state.type}
-          >
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                marginTop: 150,
-              }}
-            >
-              Take a photo of the nearest parking signs to your car.
-            </Text>
-            <View
-              style={{
-                backgroundColor: "rgba(0,0,0,0.5)",
-                flex: 0,
-                flexDirection: "row",
-                padding: 5,
-                marginTop: "auto",
-                justifyContent: "center",
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  flex: 0,
-                  alignSelf: "center",
-                  alignItems: "center",
-                }}
-                onPress={() => {
-                  this.setState({
-                    type:
-                      this.state.type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back,
-                  });
-                }}
-              >
-                <Text
-                  style={{
-                    flex: 0,
-                    fontSize: 18,
-                    marginBottom: 10,
-                    color: "white",
-                  }}
-                >
-                  {" "}
-                  Flip{" "}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Camera>
-        </View>
-      );
-    } else {
-      return <View />;
-    }
-  }
-}
+export default App;
