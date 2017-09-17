@@ -23,5 +23,8 @@
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.0",
     "react-router-native": "^4.2.0"
-  }
+  },
+  "rnpm": {
+    "assets": ["./Roboto"]
+ }
 }
