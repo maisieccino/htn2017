@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Camera, Permissions } from "expo";
 import { NativeRouter, Route } from "react-router-native";
+import Styles from "./Styles";
 
 import CameraPage from "./CameraPage";
 import ResultsPage from "./ResultsPage";

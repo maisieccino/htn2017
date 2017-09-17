@@ -1,25 +1,50 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { Camera, Permissions } from "expo";
+import Styles from "../Styles";
 
 class CameraPage extends Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
+    goToNextPage: false,
   };
 
   async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === "granted" });
   }
+
+  async clickShutterButton() {
+    if (this.camera) {
+      const uri = await this.camera.takePictureAsync();
+      const data = new FormData();
+      data.append("picture", { uri, name: "image.jpg", type: "image/jpg" });
+      const config = {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+        body: data,
+      };
+      const res = await fetch("http://google.co.uk", config);
+      console.log(res.status);
+      this.props.history.push("/results");
+    }
+  }
+
   render() {
     const { hasCameraPermission } = this.state;
     if (hasCameraPermission) {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={[Styles.page, { padding: 0 }]}>
           <Camera
             style={{ flex: 1, justifyContent: "flex-start" }}
             type={this.state.type}
+            ref={ref => {
+              this.camera = ref;
+            }}
           >
             <Text
               style={{
@@ -46,14 +71,10 @@ class CameraPage extends Component {
                   alignSelf: "center",
                   alignItems: "center",
                 }}
-                onPress={() => {
-                  this.setState({
-                    type:
-                      this.state.type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back,
-                  });
-                }}
+                // onPress={() => {
+                //   this.props.history.push("/results");
+                // }}
+                onPress={() => this.clickShutterButton()}
               >
                 <Text
                   style={{
