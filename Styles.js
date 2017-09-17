@@ -8,10 +8,12 @@ export default Styles = StyleSheet.create({
 
   },
   button: {
-    padding: 10,
+    padding: 20,
     backgroundColor: "#31B5BE",
-    margin: 10,
-    borderRadius: 20,
+    borderRadius: 30,
+    shadowOffset:{  width: 0,  height: 4,  },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   buttonText: {
     fontFamily: 'System',
@@ -23,6 +25,6 @@ export default Styles = StyleSheet.create({
     fontFamily: 'System',
     fontWeight: '500',
     fontSize: 30,
-    marginBottom: 10,
+    marginBottom: 100,
   },
 });
